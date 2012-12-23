@@ -24,7 +24,7 @@ class MongoDBPipeline(object):
     def open_spider(self, spider):
 	self.spider = spider	
 	if self.mongodb_collection is None:
-	    self.mongodb_collection = "%s_item"%spider.name
+	    self.mongodb_collection = "%s_items"%spider.name
 
 	connection = pymongo.Connection(self.mongodb_server, self.mongodb_port)
 	self.db = connection[self.mongodb_db]

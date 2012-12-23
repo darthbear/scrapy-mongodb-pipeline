@@ -10,6 +10,6 @@ Settings:
 * MONGODB_SERVER: host of the mongodb server (default: localhost)
 * MONGODB_PORT: port of the mongodb server (default: 27017)
 * MONGODB_DB: database to use in mongodb (default: scrapy)
-* MONGODB_COLLECTION: collection to use in mongodb (default: name of the spider). It can also be overwritten in the item class with a static attribute (MONGODB_COLLECTION)
+* MONGODB_COLLECTION: collection to use in mongodb (default: name of the spider postfixed with "_items"). It can also be overwritten in the item class with a static attribute (MONGODB_COLLECTION)
 * MONGODB_OVERWRITE: overwrite the old value (default: False). If set to false, it will update the existing value with the new fields. 
 * MONGODB_CONCAT_ARRAYS: if MONGODB_OVERWRITE is set to False and if it set to False (default: False) it will update array attributes by concatenating the original array with the new array, otherwise it will override the original array with the new array
