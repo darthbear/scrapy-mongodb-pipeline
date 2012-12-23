@@ -41,7 +41,7 @@ class MongoDBPipeline(object):
 	if self.mongodb_overwrite:
 	    item_values = {}
 	    for key, value in item.iteritems():
-	        if key != 'id':
+	        if key != 'id' and value != None:
 		    item_values[key] = value
 	    item_values['_id'] = item['id']
 	    collection.update({'_id': item['id']}, item_values, True)
@@ -50,7 +50,7 @@ class MongoDBPipeline(object):
 	    item_set_values = {}
 	    item_push_values = {}
 	    for key, value in item.iteritems():
-	        if key != 'id':
+	        if key != 'id' and value != None:
 		    if not self.mongodb_concat_arrays and isinstance(value, (list, tuple)):
 		        item_push_values[key] = value
 		    else:	
