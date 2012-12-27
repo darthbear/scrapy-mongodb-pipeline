@@ -1,12 +1,12 @@
 import pymongo
 
 class MongoDBPipeline(object):
-    def __init__(self, mongodb_server, mongodb_port, mongodb_db, mongodb_collection, mongodb_overwrite, mongodb_concat_arrays):
+    def __init__(self, mongodb_server, mongodb_port, mongodb_db, mongodb_collection, mongodb_full_overwrite, mongodb_concat_arrays):
 	self.mongodb_server = mongodb_server
 	self.mongodb_port = mongodb_port
 	self.mongodb_db = mongodb_db
 	self.mongodb_collection = mongodb_collection
-	self.mongodb_overwrite = mongodb_overwrite
+	self.mongodb_full_overwrite = mongodb_full_overwrite
 	self.mongodb_concat_arrays = mongodb_concat_arrays
 
     @classmethod
@@ -16,10 +16,10 @@ class MongoDBPipeline(object):
 	mongodb_port = settings.get('MONGODB_PORT', 27017)
 	mongodb_db = settings.get('MONGODB_DB', 'scrapy')
 	mongodb_collection = settings.get('MONGODB_COLLECTION', None)
-	mongodb_overwrite = settings.get('MONGODB_OVERWRITE', False)
+	mongodb_full_overwrite = settings.get('MONGODB_FULL_OVERWRITE', True)
 	mongodb_concat_arrays = settings.get('MONGODB_CONCAT_ARRAYS', True)
 
-	return cls(mongodb_server, mongodb_port, mongodb_db, mongodb_collection, mongodb_overwrite, mongodb_concat_arrays)
+	return cls(mongodb_server, mongodb_port, mongodb_db, mongodb_collection, mongodb_full_overwrite, mongodb_concat_arrays)
 
     def open_spider(self, spider):
 	self.spider = spider	
@@ -38,7 +38,7 @@ class MongoDBPipeline(object):
 		name = self.mongodb_collection
 
 	collection = self.db[name]
-	if self.mongodb_overwrite:
+	if self.mongodb_full_overwrite:
 	    item_values = {}
 	    for key, value in item.iteritems():
 	        if key != 'id' and value != None:
@@ -51,16 +51,22 @@ class MongoDBPipeline(object):
 	    item_push_values = {}
 	    for key, value in item.iteritems():
 	        if key != 'id' and value != None:
-		    if not self.mongodb_concat_arrays and isinstance(value, (list, tuple)):
+		    if self.mongodb_concat_arrays and isinstance(value, (list, tuple)) and len(value) > 0:
 		        item_push_values[key] = value
 		    else:	
 		        item_set_values[key] = value
-	    collection.update({
+	    updates = {}
+	    if len(item_set_values) > 0:
+		updates['$set'] = item_set_values
+
+	    if len(item_push_values) > 0:
+		updates['$pushAll'] = item_push_values
+
+	    collection.update(
+		{
 	            '_id': item['id']
-	        },{
-	            '$set': item_set_values,
-		    '$push': item_push_values
-	    }, True)
+	        }, updates,
+	        True)
 	return item
 		
 	

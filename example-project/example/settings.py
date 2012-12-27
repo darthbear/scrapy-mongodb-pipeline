@@ -15,7 +15,7 @@ ITEM_PIPELINES = [
     'scrapy_mongodb_pipeline.pipelines.MongoDBPipeline',
 ]
 
-MONGODB_OVERWRITE=False
+MONGODB_FULL_OVERWRITE=False
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'example (+http://www.yourdomain.com)'
