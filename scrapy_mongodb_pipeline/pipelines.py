@@ -16,8 +16,8 @@ class MongoDBPipeline(object):
 	mongodb_port = settings.get('MONGODB_PORT', 27017)
 	mongodb_db = settings.get('MONGODB_DB', 'scrapy')
 	mongodb_collection = settings.get('MONGODB_COLLECTION', None)
-	mongodb_full_overwrite = settings.get('MONGODB_FULL_OVERWRITE', True)
-	mongodb_concat_arrays = settings.get('MONGODB_CONCAT_ARRAYS', True)
+	mongodb_full_overwrite = bool(settings.get('MONGODB_FULL_OVERWRITE', True))
+	mongodb_concat_arrays = bool(settings.get('MONGODB_CONCAT_ARRAYS', False))
 
 	return cls(mongodb_server, mongodb_port, mongodb_db, mongodb_collection, mongodb_full_overwrite, mongodb_concat_arrays)
 
