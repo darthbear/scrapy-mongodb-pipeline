@@ -18,7 +18,6 @@ class MongoDBPipeline(object):
 	mongodb_collection = settings.get('MONGODB_COLLECTION', None)
 	mongodb_full_overwrite = settings.get('MONGODB_FULL_OVERWRITE', 'True') in ['true', 'True', 'TRUE', '1']
 	mongodb_concat_arrays = settings.get('MONGODB_CONCAT_ARRAYS', 'False') in ['true', 'True', 'TRUE', '1']
-	print "=========================%s=>%s"%(settings.get('MONGODB_FULL_OVERWRITE'), mongodb_full_overwrite)
 
 	return cls(mongodb_server, mongodb_port, mongodb_db, mongodb_collection, mongodb_full_overwrite, mongodb_concat_arrays)
 
@@ -40,7 +39,6 @@ class MongoDBPipeline(object):
 
 	collection = self.db[name]
 	if self.mongodb_full_overwrite:
-	    print "FULL============="
 	    item_values = {}
 	    for key, value in item.iteritems():
 	        if key != 'id' and value != None:
@@ -49,13 +47,13 @@ class MongoDBPipeline(object):
 	    collection.update({'_id': item['id']}, item_values, True)
 
 	else:
-	    print "UPD============="
 	    item_set_values = {}
 	    item_push_values = {}
 	    for key, value in item.iteritems():
 	        if key != 'id' and value != None:
-		    if self.mongodb_concat_arrays and isinstance(value, (list, tuple)) and len(value) > 0:
-		        item_push_values[key] = value
+		    if self.mongodb_concat_arrays and isinstance(value, (list, tuple)):
+			if len(value) > 0:
+		            item_push_values[key] = value
 		    else:	
 		        item_set_values[key] = value
 	    updates = {}
@@ -65,7 +63,6 @@ class MongoDBPipeline(object):
 	    if len(item_push_values) > 0:
 		updates['$pushAll'] = item_push_values
 
-	    print updates
 	    collection.update(
 		{
 	            '_id': item['id']
