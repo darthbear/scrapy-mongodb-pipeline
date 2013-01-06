@@ -12,4 +12,4 @@ Settings:
 * MONGODB_DB: database to use in mongodb (default: scrapy)
 * MONGODB_COLLECTION: collection to use in mongodb (default: name of the spider postfixed with "_items"). It can also be overwritten in the item class with a static attribute (MONGODB_COLLECTION)
 * MONGODB_FULL_OVERWRITE: if set to True, it will replace the old entry by the new entry. If set to false, it will update the existing entry with the fields used in the new entry (default: True)
-* MONGODB_CONCAT_ARRAYS: if MONGODB_OVERWRITE is set to False and if it set to False it will update array attributes by concatenating the original array with the new array, otherwise it will override the original array with the new array (default: False)
+* MONGODB_CONCAT_ARRAYS: if MONGODB_FULL_OVERWRITE is set to False and if it is set to False it will update array attributes by concatenating the original array with the new array, otherwise it will override the original array with the new array (default: False)
